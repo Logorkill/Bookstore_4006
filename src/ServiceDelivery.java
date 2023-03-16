@@ -4,7 +4,7 @@ import java.util.Random;
 public class ServiceDelivery implements Runnable {
     private final Deliverybox deliverybox;
 
-    private final int deliveryProbs = 50;
+    private final int deliveryProbs = 99;
 
 
     public ServiceDelivery(Deliverybox deliverybox) {
