@@ -10,4 +10,9 @@ public class Book {
     public Main.bookSection getType() {
         return type;
     }
+
+    @Override
+    public String toString() {
+        return "book " + type;
+    }
 }

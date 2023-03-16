@@ -3,44 +3,44 @@ import java.util.Random;
 
 public class ServiceDelivery implements Runnable {
     private final Deliverybox deliverybox;
-    private int booksStock = 0;
-    private int ticks = 0;
+
+    private final int deliveryProbs =90;
+
 
     public ServiceDelivery(Deliverybox deliverybox) {
         this.deliverybox = deliverybox;
+        (new Thread(this)).start();
     }
 
     @Override
     public void run() {
-        System.out.println("assistant 1 took " + Main.bookstore.getSections());
 
-        while (ticks < 20) {
-            try {
-                Thread.sleep(Main.TIME_TICK_SIZE * 100);
-                ticks += 1;
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            while (ServiceTick.ticks < Main.TICK_MAX) {
 
-            //System.out.println("1 TICK PASSED  |  " + ticks + " / 1000 TICKS");
+                //System.out.println("1 TICK PASSED  |  " + ticks + " / 1000 TICKS");
 
-            // add 10 books
-            int rdm = new Random().nextInt(100);
+                // add 10 books
+                int rdm = new Random().nextInt(100);
 
-            if (rdm == 1) {
-                int cpt;
-
-                Book book;
-                for (cpt = 0; cpt < 10; cpt++) {
-                    int randomInt = new Random().nextInt(Main.bookSection.values().length);
-                    Main.bookSection randomSection = Main.bookSection.values()[randomInt];
-                    book = new Book(randomSection);
-                    deliverybox.addBook(book);
-                    booksStock += 1;
+                if (rdm > deliveryProbs) {
+                    int cpt;
+                    synchronized (deliverybox) {
+                    Book book;
+                    for (cpt = 0; cpt < 10; cpt++) {
+                        int randomInt = new Random().nextInt(Main.bookSection.values().length);
+                        Main.bookSection randomSection = Main.bookSection.values()[randomInt];
+                        book = new Book(randomSection);
+                        this.deliverybox.addBook(book);
+                    }
+                    System.out.println("THREAD ID :"+ Thread.currentThread().getId() + ". Delivery of 10 books arrived !");
+                    System.out.println("THREAD ID :"+ Thread.currentThread().getId() +". Stock count : " + this.deliverybox.getStock());
+                    deliverybox.notifyAll();
                 }
-                System.out.println("Delivery of 10 books arrived !");
-                // System.out.println(deliverybox.toString());
-                System.out.println("Stock count : " + booksStock);
+                try {
+                    Thread.sleep(Main.TIME_TICK_SIZE * 10);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }

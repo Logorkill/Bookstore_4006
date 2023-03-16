@@ -2,49 +2,42 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-import static java.lang.Thread.interrupted;
-import static java.lang.Thread.sleep;
-
 public class Main {
     public static Bookstore bookstore = Bookstore.getInstance();
-    public final static int assistantCapacity = 5;
+    public final static int assistantCapacity = 1;
     public final static int customerCapacity = 1;
 
-    public final static int TIME_TICK_SIZE = 5;
+    public final static int TIME_TICK_SIZE = 2000;
+
+    public final static int TICK_MAX = 10;
     public enum bookSection {
         FICTION, HORROR, ROMANCE, FANTASY, POETRY, HISTORY
     }
+    public static ArrayList<Assistant> assistants =new ArrayList<>();
+    public static ArrayList<Customer> customers= new ArrayList<>();
+
     public static void main(String[] args) {
         buildLibrary(bookstore);
 
-        ArrayList<Assistant> assistants = new ArrayList<>();
-        employAssistant(assistants);
-        ArrayList<Customer> customers = new ArrayList<>();
-        attractCustomer(customers);
+        employAssistant();
 
+        attractCustomer();
 
-        System.out.println("Main debug 0");
+        System.out.println("BOOKSTORE init with :"+ bookstore.getSections() + "!!!");
+
+        new ServiceTick();
+
+        new ServiceDelivery(Bookstore.getDeliveryBoxInstance());
+
         for(Assistant assistant: assistants){
-            new ServiceAssistant(assistant).run();
+            new ServiceAssistant(assistant);
         }
-        System.out.println("Main debug 1");
         for(Customer customer : customers){
-            new ServiceCustomer(customer).run();
+            new ServiceCustomer(customer);
         }
-        System.out.println("Main debug 2");
-        new ServiceDelivery(Bookstore.getDeliveryBoxInstance()).run();
-
-        System.out.println(bookstore.getSections());
-        System.out.println("Main debug");
-        try {
-            sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
     }
     public static void buildLibrary(Bookstore bookstore){
-            //create section for books
+            //create type for books
             HashMap< bookSection, ArrayList<Book>> books = new HashMap<>();
             for (Main.bookSection type: Main.bookSection.values()){
                 books.put(type, new ArrayList<>());
@@ -64,12 +57,12 @@ public class Main {
             }
             bookstore.setSection(sections);
         }
-        public static void employAssistant(ArrayList<Assistant> assistants){
+        public static void employAssistant(){
             for(int cpt=0;cpt<assistantCapacity;cpt++){
                 assistants.add(new Assistant());
             }
         }
-        public static void attractCustomer(ArrayList<Customer> customers){
+        public static void attractCustomer(){
             for(int cpt=0;cpt<customerCapacity;cpt++){
                 customers.add(new Customer());
             }

@@ -13,9 +13,15 @@ public class Section {
     }
 
     public Book getBook() {
-        int randomInt = new Random().nextInt(books.size());
         if (books.size() == 0)
             return null;
-        return this.books.get(randomInt);
+        int randomInt = new Random().nextInt(books.size());
+        Book selectedBook = this.books.get(randomInt);
+        this.books.remove(selectedBook);
+        return selectedBook;
+    }
+
+    public void setBooks(ArrayList<Book> books) {
+        this.books = books;
     }
 }

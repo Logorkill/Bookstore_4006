@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public final class Bookstore{
@@ -10,13 +11,16 @@ public final class Bookstore{
     // Methods
     public static Bookstore getInstance() {
         if (instance == null) {
+            deliveryBox = Deliverybox.getInstance();
             instance = new Bookstore ();
-            deliveryBox = new Deliverybox();
         }
         return instance;
     }
     public void setSection(HashMap<Main.bookSection,Section> section) {
         this.sections = section;
+    }
+    public void setBooks(Main.bookSection type, ArrayList <Book> books) {
+        this.sections.get(type).setBooks(books);
     }
 
     public HashMap<Main.bookSection, Section> getSections() {
