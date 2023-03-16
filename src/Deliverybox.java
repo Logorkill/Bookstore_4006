@@ -1,21 +1,18 @@
 import java.util.ArrayDeque;
-import java.util.Deque;
 public class Deliverybox {
     // Attributes
-    private Deque<Book> Booklist;
-
-    // Constructor
-    public void Deliverybox() {
-        this.Booklist = new ArrayDeque<>();
-    }
+    private static ArrayDeque<Book> booklist = new ArrayDeque<>();
 
     // Methods
-    public void addBook(ArrayDeque<Book> delivery) {
-        for (Book book : delivery) {
-            this.Booklist.push(book);
-        }
+    public void addBook(Book book) {
+        this.booklist.push(book);
     }
     public Book removeBook() {
-        return this.Booklist.pop();
+        return this.booklist.pop();
+    }
+
+    @Override
+    public String toString() {
+        return booklist.toString();
     }
 }

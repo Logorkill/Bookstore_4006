@@ -2,12 +2,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import static java.lang.Thread.interrupted;
 import static java.lang.Thread.sleep;
 
 public class Main {
     public static Bookstore bookstore = Bookstore.getInstance();
     public final static int assistantCapacity = 5;
     public final static int customerCapacity = 1;
+
+    public final static int TIME_TICK_SIZE = 5;
     public enum bookSection {
         FICTION, HORROR, ROMANCE, FANTASY, POETRY, HISTORY
     }
@@ -19,19 +22,26 @@ public class Main {
         ArrayList<Customer> customers = new ArrayList<>();
         attractCustomer(customers);
 
+
+        System.out.println("Main debug 0");
         for(Assistant assistant: assistants){
             new ServiceAssistant(assistant).run();
         }
+        System.out.println("Main debug 1");
         for(Customer customer : customers){
             new ServiceCustomer(customer).run();
         }
+        System.out.println("Main debug 2");
+        new ServiceDelivery(Bookstore.getDeliveryBoxInstance()).run();
 
         System.out.println(bookstore.getSections());
+        System.out.println("Main debug");
         try {
-            sleep(10000);
+            sleep(1000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+
     }
     public static void buildLibrary(Bookstore bookstore){
             //create section for books

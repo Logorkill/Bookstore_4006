@@ -22,4 +22,12 @@ public final class Bookstore{
     public HashMap<Main.bookSection, Section> getSections() {
         return sections;
     }
+    public static  Deliverybox getDeliveryBoxInstance() {
+        return deliveryBox;
+    }
+
+    public Book getSpecificBook (Main.bookSection type) {
+        Section section = sections.get(type);
+        return section.getBook();
+    }
 }
