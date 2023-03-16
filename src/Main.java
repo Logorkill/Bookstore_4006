@@ -7,9 +7,9 @@ public class Main {
     public final static int assistantCapacity = 1;
     public final static int customerCapacity = 1;
 
-    public final static int TIME_TICK_SIZE = 2000;
+    public final static int TIME_TICK_SIZE = 500;
 
-    public final static int TICK_MAX = 10;
+    public final static int TICK_MAX = 1000;
     public enum bookSection {
         FICTION, HORROR, ROMANCE, FANTASY, POETRY, HISTORY
     }
@@ -39,7 +39,7 @@ public class Main {
     public static void buildLibrary(Bookstore bookstore){
             //create type for books
             HashMap< bookSection, ArrayList<Book>> books = new HashMap<>();
-            for (Main.bookSection type: Main.bookSection.values()){
+            for (bookSection type: bookSection.values()){
                 books.put(type, new ArrayList<>());
             }
 
@@ -51,7 +51,7 @@ public class Main {
                 books.get(randomSection).add(new Book(randomSection));
             }
             //create sections
-            HashMap<Main.bookSection, Section>  sections = new HashMap<>();
+            HashMap<bookSection, Section>  sections = new HashMap<>();
             for (bookSection type: bookSection.values()){
                 sections.put(type,(new Section(type, books.get(type))));
             }

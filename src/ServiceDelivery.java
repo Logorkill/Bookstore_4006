@@ -4,7 +4,7 @@ import java.util.Random;
 public class ServiceDelivery implements Runnable {
     private final Deliverybox deliverybox;
 
-    private final int deliveryProbs =90;
+    private final int deliveryProbs = 50;
 
 
     public ServiceDelivery(Deliverybox deliverybox) {
@@ -17,8 +17,7 @@ public class ServiceDelivery implements Runnable {
 
             while (ServiceTick.ticks < Main.TICK_MAX) {
 
-                //System.out.println("1 TICK PASSED  |  " + ticks + " / 1000 TICKS");
-
+                //System.out.println("1 TICK PASSED  |  " + ticks + " / 1000 TICKS")
                 // add 10 books
                 int rdm = new Random().nextInt(100);
 
@@ -37,7 +36,7 @@ public class ServiceDelivery implements Runnable {
                     deliverybox.notifyAll();
                 }
                 try {
-                    Thread.sleep(Main.TIME_TICK_SIZE * 10);
+                    Thread.sleep(Main.TIME_TICK_SIZE * 100);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }

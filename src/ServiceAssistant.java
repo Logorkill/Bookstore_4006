@@ -41,7 +41,9 @@ public class ServiceAssistant implements Runnable {
                         ArrayList<Book> books = assistant.tidyUp(type);
                         synchronized (Main.bookstore){
                             Main.bookstore.setBooks(type, books);
+                            Main.bookstore.notifyAll();
                         }
+
                         time_to_wait = 1 * books.size();
                         try {
                             Thread.sleep(time_to_wait);
@@ -60,11 +62,15 @@ public class ServiceAssistant implements Runnable {
             }
             else {
                 System.out.println("THREAD ID : "+ Thread.currentThread().getId() + ". Assistant (" + this.assistant + ") is waiting for a delivery");
-                try {
-                    Thread.sleep(Main.TIME_TICK_SIZE*100);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                synchronized (deliverybox){
+                    try {
+                        deliverybox.wait();
+                        //Thread.sleep(Main.TIME_TICK_SIZE*100);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
+
             }
         }
     }

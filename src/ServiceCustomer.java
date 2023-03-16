@@ -17,20 +17,24 @@ public class ServiceCustomer implements Runnable {
             Main.bookSection randomSection = Main.bookSection.values()[randomInt];
             synchronized (Main.bookstore) {
                  book = Main.bookstore.getSpecificBook(randomSection);
-            }
-            if (book == null) {
-                System.out.println("THREAD ID :" + Thread.currentThread().getId() + ". Customer(" + this.customer + ") is waiting for a book in " + randomSection);
-                try {
-                    this.wait();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+
+                 while(book ==null){
+                    System.out.println("THREAD ID :" + Thread.currentThread().getId() + ". Customer(" + this.customer + ") is waiting for a book in " + randomSection);
+                    try {
+                        Main.bookstore.wait();
+
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    book = Main.bookstore.getSpecificBook(randomSection);
                 }
-            } else {
-                customer.setBooks(book);
-                System.out.println("THREAD ID :" + Thread.currentThread().getId() + ". Customer(" + this.customer + ") took " + randomSection);
             }
+
+            customer.setBooks(book);
+            System.out.println("THREAD ID :" + Thread.currentThread().getId() + ". Customer(" + this.customer + ") took " + randomSection);
+
             try {
-                Thread.sleep(Main.TIME_TICK_SIZE * 100);
+                Thread.sleep(Main.TIME_TICK_SIZE * 1);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
